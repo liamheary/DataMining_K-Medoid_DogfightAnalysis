@@ -9,11 +9,11 @@ def infer_tactical_state(medoid_features):
     """Infers a tactical state based on key feature values."""
     # Example logic: High energy and low distance might be offensive
     if medoid_features['specific_energy_ratio'] > 0.6 and medoid_features['delta_distance'] < 0.4:
-        return "High-Energy Offensive"
+        return "Archetype A: The High-Energy Advantage"
     elif medoid_features['specific_energy_ratio'] < 0.4:
-        return "Low-Energy Defensive"
+        return "Archetype B: The Defensive Death Spiral"
     else:
-        return "Neutral/Transitional"
+        return "Archetype C: Neutral/Transitional"
 
 def create_visualization_dashboard(df, labels, medoids, features, output_path, tactical_labels):
     """Creates and saves a multi-panel visualization of the clustering results."""

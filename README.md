@@ -1,24 +1,69 @@
 
 # K-Medoids Dogfight Analysis: Discovering Tactical Archetypes
 
-This repository contains a complete, end-to-end data mining pipeline to discover "vulnerability archetypes" in modern air combat. The project uses a custom K-Medoids clustering algorithm to analyze synthetic telemetry data generated from a Python-based flight simulation environment.
+![Python](https://img.shields.io/badge/Python-3.11-blue.svg)
+![JSBSim](https://img.shields.io/badge/Simulator-JSBSim-green.svg)
+![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
 
-## Visual Overview (Code & Logic Map)
+This repository contains a complete, end-to-end data mining pipeline to discover and analyze tactical archetypes in 1-vs-1 modern air combat. By generating high-fidelity F-16 flight data and applying a custom-built K-Medoids clustering algorithm, this project mathematically identifies recurring, high-consequence flight scenarios.
+
+## Project Motivation
+
+The goal of this project, developed for the COMP-5130 graduate-level Data Mining course, is to move beyond subjective analysis of air combat and apply rigorous, unsupervised machine learning to discover fundamental patterns of advantage and vulnerability. By identifying these "tactical archetypes," we can create a data-driven framework for evaluating and improving AI pilot performance.
+
+---
+
+## Architecture & Data Flow
+
+The project is structured as a sequential pipeline that automates data generation, processing, clustering, and analysis.
 
 ```mermaid
 graph TD
-    A["Data Generator (data_generator.py)"] --> B{"Raw Telemetry Data (CSV)"};
-    B --> C["Feature Engineering (feature_engineering.py)"];
-    C --> D{"Processed Feature Matrix (features.csv)"};
-    D --> E["Custom K-Medoids (kmedoids.py)"];
-    E --> F{"Cluster Labels & Medoids"};
-    F --> G["Analysis & Visualization (analysis.py)"];
-    G --> H{"Cluster Analysis Report (Markdown)"};
-    G --> I{"Visualization Dashboard (PNG)"};
-    F --> J["Validation (validation.py)"];
+    subgraph "Data Generation & Processing"
+        A["⚙️ **Data Generator**<br>(data_generator.py)<br><i>Executes 500+ JSBSim F-16 Dogfights</i>"]
+        B[" Raw Telemetry Files<br>(.csv format)"]
+        C[" Feature Engineering<br>(feature_engineering.py)<br><i>Calculates 10 relative combat features</i>"]
+        D["Processed Feature Matrix<br>(features.csv)"]
+    end
+
+    subgraph "Machine Learning Core"
+        E[" Custom K-Medoids Algorithm<br>(kmedoids.py)<br><i>Clusters data using Manhattan distance</i>"]
+        F[" Cluster Medoids & Labels<br>(.txt files)"]
+    end
+
+    subgraph "Analysis & Reporting"
+        G["‍ Analysis & Visualization<br>(analysis.py & visualization.py)<br><i>Generates insights and visuals</i>"]
+        H[" Cluster Analysis Report<br>(cluster_analysis_report.md)"]
+        I[" Visualization Dashboard<br>(cluster_dashboard.png)"]
+    end
+
+    A -->|"Raw Telemetry (X, Y, Z, etc.)"| B
+    B -->|"Tabular Flight Data"| C
+    C -->|"10 Relative Features per Frame"| D
+    D -->|"Normalized Feature Matrix"| E
+    E -->|"Discovered Medoids & Labels"| F
+    F -->|"Cluster Data"| G
+    G -->|"Tactical Insights"| H
+    G -->|"Visual Dashboards"| I
 ```
 
-## Quick Start
+---
+
+## Key Discoveries: The Tactical Archetypes
+
+Based on a dataset of **500+ simulated 1-vs-1 F-16 engagements**, our K-Medoids algorithm identified three distinct tactical archetypes:
+
+1.  **Archetype A: The High-Energy Advantage**: Represents a position of significant advantage, characterized by high energy and a dominant position on the opponent's tail. This is a *High-Success* state.
+
+2.  **Archetype B: The Defensive Death Spiral**: A high-threat situation where an aircraft has low energy and is defensively maneuvering, making it vulnerable. This is a *High-Threat* state.
+
+3.  **Archetype C: Neutral/Transitional**: A state of relative parity where both aircraft are jockeying for position. This is a common, mid-engagement scenario.
+
+For a complete breakdown, see the full **[Cluster Analysis Report](results/cluster_analysis_report.md)**.
+
+---
+
+## Quick Start & Installation
 
 1.  **Clone the repository:**
     ```bash
@@ -39,7 +84,7 @@ graph TD
 
 4.  **Run the full pipeline:**
     ```bash
-    # 1. Generate the raw data
+    # 1. Generate the raw data (approx. 5-10 minutes)
     python3 src/data_generator.py
 
     # 2. Process the data and create the feature matrix
@@ -52,14 +97,24 @@ graph TD
     python3 notebooks/analysis.py
     ```
 
-## Knowledge Discovered: The Medoids
+---
 
-The K-Medoids algorithm has discovered three distinct tactical archetypes, each represented by a "medoid" (a real data point from the simulation that best represents the center of the cluster).
+## Repository Structure
 
--   **Cluster 0: Low-Energy Defensive**: This cluster is characterized by low specific energy and a neutral or defensive position. This is a high-threat state, as the aircraft has limited maneuverability and is vulnerable to attack.
-
--   **Cluster 1: High-Energy Offensive**: This cluster is characterized by high specific energy and an advantageous position behind the opponent. This is a high-success state, as the aircraft has a significant energy advantage and is in a good position to attack.
-
--   **Cluster 2: Neutral/Transitional**: This cluster represents a neutral or transitional state, where the aircraft is neither at a significant advantage nor disadvantage. This is a common state in a dogfight, as the aircraft jockey for position.
-
-For a more detailed analysis of the clusters, please see the [Cluster Analysis Report](data/processed/cluster_analysis_report.md).
+```
+DataMining_K-Medoid_DogfightAnalysis/
+├── aircraft/               # JSBSim aircraft models (F-16)
+├── data/
+│   ├── processed/          # Processed feature matrices and cluster results
+│   └── raw/                # Raw telemetry data from simulations
+├── engine/                 # JSBSim engine models
+├── notebooks/              # Jupyter notebooks for analysis and reporting
+├── results/                # Final analysis reports
+├── src/
+│   ├── models/             # Custom K-Medoids algorithm
+│   └── pipelines/          # Feature engineering and visualization scripts
+├── thruster/               # JSBSim thruster models
+├── visualizations/         # Saved visual dashboards
+├── README.md               # This file
+└── requirements.txt        # Python dependencies
+```

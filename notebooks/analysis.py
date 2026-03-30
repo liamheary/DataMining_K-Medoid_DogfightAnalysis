@@ -5,23 +5,57 @@ import sys
 sys.path.append('.')
 from src.pipelines.visualization import create_visualization_dashboard, infer_tactical_state
 
-def generate_markdown_report(medoids, features, tactical_labels, report_path):
-    """Generates a Markdown report summarizing the cluster analysis."""
-    with open(report_path, 'w') as f:
-        f.write("# K-Medoids Cluster Analysis Report\n\n")
-        f.write("This report details the tactical archetypes discovered by the K-Medoids clustering algorithm.\n\n")
+def infer_tactical_state(medoid_features):
+    """Infers a tactical state based on key feature values."""
+    # Example logic: High energy and low distance might be offensive
+    if medoid_features['specific_energy_ratio'] > 0.6 and medoid_features['delta_distance'] < 0.4:
+        return "Archetype A: The High-Energy Advantage"
+    elif medoid_features['specific_energy_ratio'] < 0.4:
+        return "Archetype B: The Defensive Death Spiral"
+    else:
+        return "Archetype C: Neutral/Transitional"
 
+def generate_markdown_report(medoids, features, tactical_labels, report_path, num_simulations):
+    """Generates a comprehensive Markdown report summarizing the cluster analysis."""
+    with open(report_path, 'w') as f:
+        # 1. Executive Summary
+        f.write("# K-Medoids Dogfight Analysis: Tactical Archetype Report\n\n")
+        f.write("## 1. Executive Summary\n\n")
+        f.write(f"This report details the results of a data mining analysis performed on a dataset of **{num_simulations}+ simulated 1-vs-1 F-16 engagements**. ")
+        f.write("Using a custom-built K-Medoids clustering algorithm, we have identified three distinct, recurring tactical archetypes from the flight telemetry. ")
+        f.write("These archetypes represent common, physically-realizable states in air combat that correspond to conditions of advantage, disadvantage, and neutrality.")
+        f.write("\n\n---\n\n")
+
+        # 2. Methodology Overview
+        f.write("## 2. Methodology Overview\n\n")
+        f.write("The core of this analysis is the **K-Medoids (Partitioning Around Medoids - PAM)** algorithm. Unlike K-Means, which calculates a mathematical *average* for a cluster's center (a centroid), K-Medoids selects an *actual data point* from the dataset as the cluster's center (a medoid). ")
+        f.write("This is critical for our application, as it ensures that each tactical archetype is represented by a physically possible flight state that occurred in the simulation.\n\n")
+        f.write("**Manhattan Distance** was chosen as the distance metric. This metric calculates the sum of absolute differences between coordinates, which is robust to outliers and provides a clear measure of dissimilarity across our 10-dimensional feature space.\n\n")
+        f.write("![Visualization Dashboard](../visualizations/cluster_dashboard.png)\n*Caption: A 2D PCA projection of the clusters and a radar chart comparing medoid features.*")
+        f.write("\n\n---\n\n")
+
+        # 3. The Discovered Archetypes
+        f.write("## 3. The Discovered Archetypes\n\n")
         for i, medoid in enumerate(medoids):
-            f.write(f"## Cluster {i}: {tactical_labels[i]}\n\n")
-            f.write("This cluster represents a distinct tactical state characterized by the following features:\n\n")
+            f.write(f"### {tactical_labels[i]}\n\n")
+            
+            # Tactical Summary
+            if "Advantage" in tactical_labels[i]:
+                f.write("**Tactical Summary:** This archetype represents a **position of significant advantage**. The aircraft in this state has a high energy level, is likely behind the opponent, and is in a prime position to dictate the terms of the engagement. This is a *High-Success* state to be sought after.\n\n")
+            elif "Defensive" in tactical_labels[i]:
+                f.write("**Tactical Summary:** This archetype represents a **defensive, high-threat situation**. The aircraft has a low energy state, is likely being targeted, and has limited options for offensive maneuvers. This is a *High-Threat* state to be avoided.\n\n")
+            else:
+                f.write("**Tactical Summary:** This archetype represents a **neutral or transitional state**. Both aircraft are in a relatively equal position, jockeying for an advantage. This state often occurs during the initial merge or during periods of maneuvering and counter-maneuvering.\n\n")
+
+            # Feature Breakdown Table
+            f.write("**Feature Breakdown:**\n\n")
             f.write("| Feature                 | Normalized Value | Tactical Interpretation                                  |\n")
             f.write("|-------------------------|------------------|----------------------------------------------------------|\n")
-
             for j, feature_name in enumerate(features):
                 value = medoid[j]
                 interpretation = get_feature_interpretation(feature_name, value)
                 f.write(f"| {feature_name:<23} | {value:<16.4f} | {interpretation:<48} |\n")
-            f.write("\n")
+            f.write("\n---\n\n")
 
 def get_feature_interpretation(feature_name, value):
     """Provides a qualitative interpretation of a normalized feature value."""
@@ -110,16 +144,7 @@ if __name__ == '__main__':
 
     # Generate Markdown Report
     report_file = "results/cluster_analysis_report.md"
-    tactical_labels = [infer_tactical_state(dict(zip(features, medoid))) for medoid in medoids]
-    generate_markdown_report(medoids, features, tactical_labels, report_file)
+    generate_markdown_report(medoids, features, tactical_labels, report_file, 500)
     print(f"Analysis report saved to {report_file}")
 
-def infer_tactical_state(medoid_features):
-    """Infers a tactical state based on key feature values."""
-    # Example logic: High energy and low distance might be offensive
-    if medoid_features['specific_energy_ratio'] > 0.6 and medoid_features['delta_distance'] < 0.4:
-        return "High-Energy Offensive"
-    elif medoid_features['specific_energy_ratio'] < 0.4:
-        return "Low-Energy Defensive"
-    else:
-        return "Neutral/Transitional"
+
