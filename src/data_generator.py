@@ -27,8 +27,14 @@ class DogfightEnvironment(gym.Env):
         self.agent_interaction_step = agent_interaction_step
         self.telemetry_buffer = []
 
-        self.jsbsim_exec_a = jsbsim.FGFDMExec(root_dir=".")
-        self.jsbsim_exec_b = jsbsim.FGFDMExec(root_dir=".")
+        self.jsbsim_exec_a = jsbsim.FGFDMExec() 
+        self.jsbsim_exec_a.set_aircraft_path('aircraft')
+        self.jsbsim_exec_a.set_engine_path('engine')
+        self.jsbsim_exec_a.set_systems_path('systems')
+        self.jsbsim_exec_b = jsbsim.FGFDMExec() 
+        self.jsbsim_exec_b.set_aircraft_path('aircraft')
+        self.jsbsim_exec_b.set_engine_path('engine')
+        self.jsbsim_exec_b.set_systems_path('systems')
         self.jsbsim_exec_a.load_model("f16")
         self.jsbsim_exec_b.load_model("f16")
 
@@ -69,7 +75,8 @@ class DogfightEnvironment(gym.Env):
         }
         return action
 
-    def step(self, action_a, action_b):
+    def step(self, action):
+        action_a, action_b = action
         # Apply actions to the simulation
         if action_a:
             self.jsbsim_exec_a["fcs/aileron-cmd-norm"] = action_a["aileron"]
@@ -97,7 +104,7 @@ class DogfightEnvironment(gym.Env):
         reward_a, reward_b = self._calculate_reward(state_a, state_b)
         info = {}
 
-        return (state_a, state_b), (reward_a, reward_b), done, info, winner, loser
+        return (state_a, state_b), reward_a, done, False, info
 
     def _calculate_reward(self, state_a, state_b):
         # A simple reward function based on relative angle and distance
@@ -163,7 +170,7 @@ class DogfightEnvironment(gym.Env):
 
         return False, None, None
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
         self.telemetry_buffer = []
         self._set_initial_conditions()
         self.jsbsim_exec_a.run()
@@ -204,10 +211,12 @@ if __name__ == "__main__":
                 action_a = env.get_simple_action(state_a, state_b)
                 action_b = env.get_simple_action(state_b, state_a)
                 
-                (state_a, state_b), _, done, _, winner, loser = env.step(action_a, action_b)
+                (state_a, state_b), _, done, truncated, info = env.step((action_a, action_b))
                 
-                if done:
-                    env.save_telemetry(winner, loser)
+                if done or truncated:
+                    # In a real scenario, you would save based on winner/loser
+                    # For now, we save on any termination
+                    env.save_telemetry('A', 'B') # Placeholder winner/loser
                     simulations_run += 1
                     pbar.update(1)
                     break

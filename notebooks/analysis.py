@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import sys
 sys.path.append('.')
-from src.pipelines.visualization import create_visualization_dashboard, infer_tactical_state
+from src.pipelines.visualization import create_visualization_dashboard, create_kde_plot
 
 def infer_tactical_state(medoid_features):
     """Infers a tactical state based on key feature values."""
@@ -138,13 +138,11 @@ if __name__ == '__main__':
     ]
 
     # Generate Visualization
-    output_file = "visualizations/cluster_dashboard.png"
-    tactical_labels = [infer_tactical_state(dict(zip(features, medoid))) for medoid in medoids]
-    create_visualization_dashboard(df, labels, medoids, features, output_file, tactical_labels)
+    import subprocess
+    subprocess.run(["python3", "src/pipelines/visualization.py"])
 
     # Generate Markdown Report
     report_file = "results/cluster_analysis_report.md"
+    tactical_labels = [infer_tactical_state(dict(zip(features, medoid))) for medoid in medoids]
     generate_markdown_report(medoids, features, tactical_labels, report_file, 500)
     print(f"Analysis report saved to {report_file}")
-
-

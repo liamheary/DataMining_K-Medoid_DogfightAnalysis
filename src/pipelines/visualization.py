@@ -5,15 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA
 
-def infer_tactical_state(medoid_features):
-    """Infers a tactical state based on key feature values."""
-    # Example logic: High energy and low distance might be offensive
-    if medoid_features['specific_energy_ratio'] > 0.6 and medoid_features['delta_distance'] < 0.4:
-        return "Archetype A: The High-Energy Advantage"
-    elif medoid_features['specific_energy_ratio'] < 0.4:
-        return "Archetype B: The Defensive Death Spiral"
-    else:
-        return "Archetype C: Neutral/Transitional"
+
 
 def create_visualization_dashboard(df, labels, medoids, features, output_path, tactical_labels):
     """Creates and saves a multi-panel visualization of the clustering results."""
@@ -53,7 +45,7 @@ def create_visualization_dashboard(df, labels, medoids, features, output_path, t
         ax2.plot(angles, values, linewidth=2, linestyle='solid', label=f'Medoid {i}: {tactical_labels[i]}')
         ax2.fill(angles, values, alpha=0.25)
 
-    ax2.set_thetagrids(np.degrees(angles[:-1]))
+    ax2.set_xticks(angles[:-1])
     ax2.set_xticklabels(features)
     ax2.set_title('Medoid Feature Comparison', fontsize=16)
     ax2.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
@@ -74,6 +66,16 @@ def infer_tactical_state(medoid_features):
     else:
         return "Neutral/Transitional"
 
+def create_kde_plot(df, labels, features_to_plot, output_path):
+    """Creates and saves a KDE plot for the specified features."""
+    df_to_plot = df[features_to_plot + ['label']]
+    df_to_plot['label'] = labels
+    
+    g = sns.pairplot(df_to_plot, hue="label", palette="viridis")
+    g.fig.suptitle("Feature Distributions (KDE) by Cluster", y=1.02)
+    plt.savefig(output_path)
+    print(f"KDE plot saved to {output_path}")
+
 if __name__ == '__main__':
     try:
         df = pd.read_csv("data/processed/features.csv")
@@ -90,6 +92,13 @@ if __name__ == '__main__':
         'delta_load_factor'
     ]
 
+    # Create and save the visualization dashboard
     output_file = "visualizations/cluster_dashboard.png"
     tactical_labels = [infer_tactical_state(dict(zip(features, medoid))) for medoid in medoids]
     create_visualization_dashboard(df, labels, medoids, features, output_file, tactical_labels)
+
+    # Create and save the KDE plot
+    kde_output_file = "visualizations/feature_distributions.png"
+    features_to_plot = ['specific_energy_ratio', 'angle_off_tail', 'closure_rate']
+    df['label'] = labels # Add labels to the dataframe for plotting
+    create_kde_plot(df, labels, features_to_plot, kde_output_file)

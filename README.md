@@ -53,11 +53,11 @@ graph TD
 
 Based on a dataset of **500+ simulated 1-vs-1 F-16 engagements**, our K-Medoids algorithm identified three distinct tactical archetypes:
 
-1.  **Archetype A: The High-Energy Advantage**: Represents a position of significant advantage, characterized by high energy and a dominant position on the opponent's tail. This is a *High-Success* state.
+1. **Archetype A: The High-Energy Advantage**: Represents a position of significant advantage, characterized by high energy and a dominant position on the opponent's tail. This is a *High-Success* state.
 
-2.  **Archetype B: The Defensive Death Spiral**: A high-threat situation where an aircraft has low energy and is defensively maneuvering, making it vulnerable. This is a *High-Threat* state.
+2. **Archetype B: The Defensive Death Spiral**: A high-threat situation where an aircraft has low energy and is defensively maneuvering, making it vulnerable. This is a *High-Threat* state.
 
-3.  **Archetype C: Neutral/Transitional**: A state of relative parity where both aircraft are jockeying for position. This is a common, mid-engagement scenario.
+3. **Archetype C: Neutral/Transitional**: A state of relative parity where both aircraft are jockeying for position. This is a common, mid-engagement scenario.
 
 For a complete breakdown, see the full **[Cluster Analysis Report](results/cluster_analysis_report.md)**.
 
@@ -65,24 +65,28 @@ For a complete breakdown, see the full **[Cluster Analysis Report](results/clust
 
 ## Quick Start & Installation
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
+
     ```bash
     git clone https://github.com/liamheary/DataMining_K-Medoid_DogfightAnalysis.git
     cd DataMining_K-Medoid_DogfightAnalysis
     ```
 
-2.  **Create and activate a virtual environment:**
+2. **Create and activate a virtual environment:**
+
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate
     ```
 
-3.  **Install the required packages:**
+3. **Install the required packages:**
+
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Run the full pipeline:**
+4. **Run the full pipeline:**
+
     ```bash
     # 1. Generate the raw data (approx. 5-10 minutes)
     python3 src/data_generator.py
