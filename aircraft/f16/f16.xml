@@ -307,7 +307,6 @@
 
             <!-- Stick Force Sensor -->
             <kinematic name="Pitch Stick Block">
-                <input> fcs/pitch-trim-cmd-norm </input>
                 <input> fcs/pitch-stick-cmd-norm </input>
                 <clipto>
                     <min> -0.44 </min>

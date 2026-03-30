@@ -125,8 +125,6 @@ class DogfightEnvironment(gym.Env):
 
         return reward_a, reward_b
 
-        return (state_a, state_b), reward, done, info, winner, loser
-
     def _get_state(self, fdm_exec, aircraft_id):
         return {
             "aircraft_id": aircraft_id,
@@ -165,20 +163,6 @@ class DogfightEnvironment(gym.Env):
 
         return False, None, None
 
-# Need to add geodetic_to_ecef to the file
-def geodetic_to_ecef(lat, lon, alt):
-    """Converts geodetic coordinates to ECEF coordinates."""
-    lat_rad = np.radians(lat)
-    lon_rad = np.radians(lon)
-    a = 6378137.0  # WGS-84 Earth semi-major axis in meters
-    e2 = 6.69437999014e-3  # WGS-84 first eccentricity squared
-    N = a / np.sqrt(1 - e2 * np.sin(lat_rad)**2)
-    
-    x = (N + alt) * np.cos(lat_rad) * np.cos(lon_rad)
-    y = (N + alt) * np.cos(lat_rad) * np.sin(lon_rad)
-    z = ((1 - e2) * N + alt) * np.sin(lat_rad)
-    return x, y, z
-
     def reset(self):
         self.telemetry_buffer = []
         self._set_initial_conditions()
@@ -206,18 +190,24 @@ def geodetic_to_ecef(lat, lon, alt):
         df.to_csv(output_path, index=False)
         print(f"Telemetry data saved to {output_path}")
 
-if __name__ == "__main__":
-    env = DogfightEnvironment()
-    state_a, state_b = env.reset()
-    env.render()
+import tqdm
 
-    for _ in range(1000):  # Run for a longer duration
-        action_a = env.get_simple_action(state_a, state_b)
-        action_b = env.get_simple_action(state_b, state_a)
-        
-        (state_a, state_b), _, done, _, winner, loser = env.step(action_a, action_b)
-        env.render()
-        
-        if done:
-            env.save_telemetry(winner, loser)
+if __name__ == "__main__":
+    TARGET_SIMULATIONS = 500
+    env = DogfightEnvironment()
+    
+    with tqdm.tqdm(total=TARGET_SIMULATIONS, desc="Generating Simulation Data") as pbar:
+        simulations_run = 0
+        while simulations_run < TARGET_SIMULATIONS:
             state_a, state_b = env.reset()
+            for _ in range(1000):  # Max steps per simulation
+                action_a = env.get_simple_action(state_a, state_b)
+                action_b = env.get_simple_action(state_b, state_a)
+                
+                (state_a, state_b), _, done, _, winner, loser = env.step(action_a, action_b)
+                
+                if done:
+                    env.save_telemetry(winner, loser)
+                    simulations_run += 1
+                    pbar.update(1)
+                    break

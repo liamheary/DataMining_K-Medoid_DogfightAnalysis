@@ -7,15 +7,15 @@ This repository contains a complete, end-to-end data mining pipeline to discover
 
 ```mermaid
 graph TD
-    A[Data Generator (data_generator.py)] --> B{Raw Telemetry Data (CSV)};
-    B --> C[Feature Engineering (feature_engineering.py)];
-    C --> D{Processed Feature Matrix (features.csv)};
-    D --> E[Custom K-Medoids (kmedoids.py)];
-    E --> F{Cluster Labels & Medoids};
-    F --> G[Analysis & Visualization (analysis.py)];
-    G --> H{Cluster Analysis Report (Markdown)};
-    G --> I{Visualization Dashboard (PNG)};
-    F --> J[Validation (validation.py)];
+    A["Data Generator (data_generator.py)"] --> B{"Raw Telemetry Data (CSV)"};
+    B --> C["Feature Engineering (feature_engineering.py)"];
+    C --> D{"Processed Feature Matrix (features.csv)"};
+    D --> E["Custom K-Medoids (kmedoids.py)"];
+    E --> F{"Cluster Labels & Medoids"};
+    F --> G["Analysis & Visualization (analysis.py)"];
+    G --> H{"Cluster Analysis Report (Markdown)"};
+    G --> I{"Visualization Dashboard (PNG)"};
+    F --> J["Validation (validation.py)"];
 ```
 
 ## Quick Start

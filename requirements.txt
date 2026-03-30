@@ -9,3 +9,5 @@ py-cpuinfo
 psutil
 gym
 jsbsim
+gymnasium
+tqdm
