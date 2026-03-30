@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+scikit-learn-extra
+matplotlib
+seaborn
+jupyter
+py-cpuinfo
+psutil
+gym
+jsbsim

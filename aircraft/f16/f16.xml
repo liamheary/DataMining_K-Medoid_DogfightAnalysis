@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
+<fdm_config name="General Dynamics F-16A" version="2.0" release="PRODUCTION"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
+
+    <fileheader>
+        <author> Jon S. Berndt</author>
+        <filecreationdate> 2000-06-20 </filecreationdate>
+        <version> S&amp;C 4th Ed. case study aircraft </version>
+        <description>
+            The data for this aircraft model has been taken from the F-16 model described
+            in the book by Stevens and Lewis, "Aircraft Control and Simulation, 2nd. Ed."
+
+            The F-16 model is a high-fidelity, full-envelope, nonlinear, six-degree-of-freedom
+            aircraft simulation model. The aerodynamic model is a function of angle-of-attack,
+            sideslip angle, and elevator, aileron, and rudder deflections. The aerodynamic data
+            is valid for angles-of-attack from -10 to 45 degrees, and for sideslip angles from
+            -30 to 30 degrees. A detailed development of the aerodynamic model can be found
+            in the NASA technical report by Nguyen, Ogburn, Gilbert, et. al., "Simulator Study
+            of Stall/Post-Stall Characteristics of a Fighter Airplane With Relaxed Longitudinal
+            Static Stability," NASA TP-1538, December 1979.
+        </description>
+        <reference refID="None" author="Richard Murray" title="http://www.cds.caltech.edu/~murray/projects/afosr95-vehicles/models/f16/" date="n/a"/>
+    </fileheader>
+
+    <metrics>
+        <wingarea unit="FT2">      300.0 </wingarea>
+        <wingspan unit="FT">       30.0 </wingspan>
+        <chord unit="FT">           11.32 </chord>
+        <htailarea unit="FT2">     63.7 </htailarea>
+        <htailarm unit="FT">       16.46 </htailarm>
+        <vtailarea unit="FT2">     54.75 </vtailarea>
+        <vtailarm unit="FT">       16.46 </vtailarm>
+        <location name="AERORP" unit="IN">
+            <x> -172.6 </x>
+            <y>    0.0 </y>
+            <z>  -15.0 </z>
+        </location>
+        <location name="EYEPOINT" unit="IN">
+            <x> -150 </x>
+            <y>   18 </y>
+            <z>  -36 </z>
+        </location>
+    </metrics>
+
+    <mass_balance>
+        <emptywt unit="LBS"> 17400.0 </emptywt>
+        <!--
+            Ixx, Iyy, Izz, and Ixz are given in slug-ft^2
+
+            Moments of inertia are defined as follows:
+
+            Ixx = Integral((y^2+z^2),dm)
+            Iyy = Integral((x^2+z^2),dm)
+            Izz = Integral((x^2+y^2),dm)
+            Ixy = Integral(x*y,dm)
+            Ixz = Integral(x*z,dm)
+            Iyz = Integral(y*z,dm)
+        -->
+        <ixx unit="SLUG*FT2">   9496.0 </ixx>
+        <iyy unit="SLUG*FT2">  55814.0 </iyy>
+        <izz unit="SLUG*FT2">  63100.0 </izz>
+        <ixz unit="SLUG*FT2">   -982.0 </ixz>
+        <location name="CG" unit="IN">
+            <x> -193.0 </x>
+            <y>    0.0 </y>
+            <z>   -5.1 </z>
+        </location>
+        <pointmass name="PILOT">
+            <weight unit="LBS"> 230.0 </weight>
+            <location name="POINTMASS" unit="IN">
+                <x> -150.0 </x>
+                <y>    0.0 </y>
+                <z>  -30.0 </z>
+            </location>
+        </pointmass>
+    </mass_balance>
+
+    <ground_reactions>
+        <contact type="BOGEY" name="NOSE_LG">
+            <location unit="IN">
+                <x> -299.6 </x>
+                <y>    0.0 </y>
+                <z>  -72.0 </z>
+            </location>
+            <static_load unit="LBS"> 3500.0 </static_load>
+            <max_steer unit="DEG"> 80.0 </max_steer>
+            <spring_coeff unit="LBS/FT"> 10000.0 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2500.0 </damping_coeff>
+            <retractable>1</retractable>
+        </contact>
+
+        <contact type="BOGEY" name="LEFT_MLG">
+            <location unit="IN">
+                <x> -158.6 </x>
+                <y>  -48.0 </y>
+                <z>  -71.6 </z>
+            </location>
+            <static_load unit="LBS"> 10000.0 </static_load>
+            <spring_coeff unit="LBS/FT"> 15000.0 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 4000.0 </damping_coeff>
+            <retractable>1</retractable>
+        </contact>
+
+        <contact type="BOGEY" name="RIGHT_MLG">
+            <location unit="IN">
+                <x> -158.6 </x>
+                <y>   48.0 </y>
+                <z>  -71.6 </z>
+            </location>
+            <static_load unit="LBS"> 10000.0 </static_load>
+            <spring_coeff unit="LBS/FT"> 15000.0 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 4000.0 </damping_coeff>
+            <retractable>1</retractable>
+        </contact>
+
+        <contact type="STRUCTURE" name="LEFT_WT">
+            <location unit="IN">
+                <x> -167.3 </x>
+                <y> -180.0 </y>
+                <z>  -21.7 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+        <contact type="STRUCTURE" name="RIGHT_WT">
+            <location unit="IN">
+                <x> -167.3 </x>
+                <y>  180.0 </y>
+                <z>  -21.7 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+        <contact type="STRUCTURE" name="TOP_VS">
+            <location unit="IN">
+                <x> -272.7 </x>
+                <y>    0.0 </y>
+                <z> -156.4 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+        <contact type="STRUCTURE" name="LEFT_VFT">
+            <location unit="IN">
+                <x> -272.7 </x>
+                <y>  -48.0 </y>
+                <z>  -72.9 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+        <contact type="STRUCTURE" name="RIGHT_VFT">
+            <location unit="IN">
+                <x> -272.7 </x>
+                <y>   48.0 </y>
+                <z>  -72.9 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+        <contact type="STRUCTURE" name="INTAKE">
+            <location unit="IN">
+                <x> -218.3 </x>
+                <y>    0.0 </y>
+                <z>  -54.0 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+        <contact type="STRUCTURE" name="RADOME">
+            <location unit="IN">
+                <x> -325.2 </x>
+                <y>    0.0 </y>
+                <z>  -31.7 </z>
+            </location>
+            <static_load> 20000 </static_load>
+            <spring_coeff> 50000 </spring_coeff>
+            <damping_coeff> 10000 </damping_coeff>
+            <mu> 0.5 </mu>
+        </contact>
+
+        <brakegroup name="LEFT_BRAKE">
+            <contact>LEFT_MLG</contact>
+            <max_force>10000</max_force>
+            <input>fcs/left-brake-cmd-norm</input>
+        </brakegroup>
+        <brakegroup name="RIGHT_BRAKE">
+            <contact>RIGHT_MLG</contact>
+            <max_force>10000</max_force>
+            <input>fcs/right-brake-cmd-norm</input>
+        </brakegroup>
+        <steering name="NOSE_WHEEL">
+            <contact>NOSE_LG</contact>
+            <max_angle>80</max_angle>
+            <input>fcs/steer-cmd-norm</input>
+        </steering>
+    </ground_reactions>
+
+    <propulsion>
+        <engine file="F100-PW-229">
+            <location unit="IN">
+                <x> -155.0 </x>
+                <y>    0.0 </y>
+                <z>  -30.0 </z>
+            </location>
+            <feed>0</feed>
+            <feed>1</feed>
+            <thruster file="../thruster/direct.xml">
+                <location unit="IN">
+                    <x> -255.0 </x>
+                    <y>    0.0 </y>
+                    <z>  -30.0 </z>
+                </location>
+                <orient unit="DEG">
+                    <pitch> 0.0 </pitch>
+                    <roll>  0.0 </roll>
+                    <yaw>   0.0 </yaw>
+                </orient>
+            </thruster>
+        </engine>
+        <tank type="FUEL" name="int_fuel_1">
+            <location unit="IN">
+                <x> -180.0 </x>
+                <y>    0.0 </y>
+                <z>  -30.0 </z>
+            </location>
+            <capacity unit="LBS"> 3486 </capacity>
+            <contents unit="LBS"> 3486 </contents>
+        </tank>
+        <tank type="FUEL" name="int_fuel_2">
+            <location unit="IN">
+                <x> -200.0 </x>
+                <y>    0.0 </y>
+                <z>  -30.0 </z>
+            </location>
+            <capacity unit="LBS"> 3486 </capacity>
+            <contents unit="LBS"> 3486 </contents>
+        </tank>
+        <tank type="FUEL" name="ext_fuel_1">
+            <location unit="IN">
+                <x> -200.0 </x>
+                <y>    0.0 </y>
+                <z>  -30.0 </z>
+            </location>
+            <capacity unit="LBS"> 2991 </capacity>
+            <contents unit="LBS"> 2991 </contents>
+        </tank>
+        <tank type="FUEL" name="ext_fuel_2">
+            <location unit="IN">
+                <x> -200.0 </x>
+                <y>    0.0 </y>
+                <z>  -30.0 </z>
+            </location>
+            <capacity unit="LBS"> 2991 </capacity>
+            <contents unit="LBS"> 2991 </contents>
+        </tank>
+    </propulsion>
+
+    <flight_control name="FCS: F16">
+        <!--
+            This is a fly-by-wire flight control system based on the FCS given in
+            the book by Stevens and Lewis, "Aircraft Control and Simulation, 2nd. Ed."
+            The FCS is composed of several channels that are listed below.
+        -->
+
+        <!--
+        #####################################################################
+        #                             PITCH CHANNEL
+        #####################################################################
+        -->
+        <channel name="Pitch">
+            <!--
+                This is the longitudinal axis flight control system. It is a
+                pitch-rate command system when the landing gear handle is up. When
+                the gear handle is down, the longitudinal FCS reverts to a more
+                conventional stability augmentation system. Also, when the gear
+                is down, an angle-of-attack limiter provides stall protection and
+                a speed-dependent gain schedule is introduced on the stick input.
+            -->
+            <!--
+                The elevator command is limited to 44% of the full negative
+                (trailing edge up) direction. This limits the aircraft to a
+                maximum of 9 g's positive, and 4 g's negative.
+            -->
+            <summer name="Elevator Command Limiter">
+                <input> fcs/pitch-trim-cmd-norm </input>
+                <input> fcs/pitch-stick-cmd-norm </input>
+                <clipto>
+                    <min> -0.44 </min>
+                    <max>  1.00 </max>
+                </clipto>
+            </summer>
+
+            <!-- Stick Force Sensor -->
+            <kinematic name="Pitch Stick Block">
+                <input> fcs/pitch-trim-cmd-norm </input>
+                <input> fcs/pitch-stick-cmd-norm </input>
+                <clipto>
+                    <min> -0.44 </min>
+                    <max>  1.00 </max>
+                </clipto>
+            </kinematic>
+
+            <!--
+                The following PID controller provides for g-load control as a
+                function of pitch rate.
+            -->
+            <pid name="G-load PID">
+                <input> fcs/g-load-command </input>
+                <feedback> accelerations/nz-pilot-fps_sec </feedback>
+                <kp> 0.4 </kp>
+                <ki> 0.1 </ki>
+                <kd> 0.0 </kd>
+                <clipto>
+                    <min> -2.0 </min>
+                    <max>  2.0 </max>
+                </clipto>
+            </pid>
+
+            <!-- Pitch rate feedback -->
+            <pure_gain name="Pitch Rate Feedback">
+                <input> velocities/q-rad_sec </input>
+                <gain> -1.0 </gain>
+            </pure_gain>
+
+            <summer name="Pitch Rate Summing Junction">
+                <input> fcs/pitch-stick-command </input>
+                <input> fcs/g-load-pid </input>
+                <input> fcs/pitch-rate-feedback </input>
+            </summer>
+
+            <!--
+                When angle of attack nears 30 degrees, the following controller
+                commands full pitch down to prevent stall.
+            -->
+            <pid name="Alpha limiter">
+                <input> aero/alpha-rad </input>
+                <feedback> 0.5235 </feedback>
+                <kp> -1.0 </kp>
+                <ki>  0.0 </ki>
+                <kd>  0.0 </kd>
+                <clipto>
+                    <min> -1.0 </min>
+                    <max>  0.0 </max>
+                </clipto>
+            </pid>
+
+            <!-- Elevator command summing junction -->
+            <summer name="Elevator command">
+                <input> fcs/pitch-rate-summing-junction </input>
+                <input> fcs/alpha-limiter </input>
+                <clipto>
+                    <min> -25.0 </min>
+                    <max>  25.0 </max>
+                </clipto>
+            </summer>
+
+            <!-- Elevator actuator -->
+            <actuator name="Elevator">
+                <input> fcs/elevator-command </input>
+                <lag> 20.0 </lag>
+                <clipto>
+                    <min> -25.0 </min>
+                    <max>  25.0 </max>
+                </clipto>
+            </actuator>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             ROLL CHANNEL
+        #####################################################################
+        -->
+        <channel name="Roll">
+            <!--
+                This is the lateral axis flight control system. It is a roll-rate
+                command system.
+            -->
+            <!-- Stick Force Sensor -->
+            <scheduled_gain name="Stick Force Gain">
+                <input> fcs/roll-stick-cmd-norm </input>
+                <gain>
+                    <table>
+                        <independent> velocities/mach </independent>
+                        <dependent>
+                             0.2
+                             0.4
+                             0.8
+                             1.0
+                        </dependent>
+                    </table>
+                </gain>
+            </scheduled_gain>
+
+            <!-- The following PID controller provides for roll rate control -->
+            <pid name="Roll Rate PID">
+                <input> fcs/stick-force-gain </input>
+                <feedback> velocities/p-rad_sec </feedback>
+                <kp> 1.0 </kp>
+                <ki> 0.0 </ki>
+                <kd> 0.0 </kd>
+                <clipto>
+                    <min> -1.0 </min>
+                    <max>  1.0 </max>
+                </clipto>
+            </pid>
+
+            <!-- Aileron command -->
+            <summer name="Aileron Command">
+                <input> fcs/roll-trim-cmd-norm </input>
+                <input> fcs/roll-rate-pid </input>
+                <clipto>
+                    <min> -21.5 </min>
+                    <max>  21.5 </max>
+                </clipto>
+            </summer>
+
+            <!-- Aileron actuator -->
+            <actuator name="Aileron">
+                <input> fcs/aileron-command </input>
+                <lag> 20.0 </lag>
+                <clipto>
+                    <min> -21.5 </min>
+                    <max>  21.5 </max>
+                </clipto>
+            </actuator>
+
+            <aerosurface_scale name="Aileron effectiveness">
+                <input> fcs/aileron </input>
+                <domain>
+                    <min> -21.5 </min>
+                    <max>  21.5 </max>
+                </domain>
+                <range>
+                    <min> -1.0 </min>
+                    <max>  1.0 </max>
+                </range>
+            </aerosurface_scale>
+
+            <aerosurface_scale name="Aileron to speedbrake interconnect">
+                <input> fcs/aileron-effectiveness </input>
+                <domain>
+                    <min> -1.0 </min>
+                    <max>  1.0 </max>
+                </domain>
+                <range>
+                    <min> 0.25 </min>
+                    <max> 0.25 </max>
+                </range>
+            </aerosurface_scale>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             YAW CHANNEL
+        #####################################################################
+        -->
+        <channel name="Yaw">
+            <!--
+                This is the directional axis flight control system.
+            -->
+            <!-- Yaw rate feedback -->
+            <pure_gain name="Yaw Rate Feedback">
+                <input> velocities/r-rad_sec </input>
+                <gain> -1.0 </gain>
+            </pure_gain>
+
+            <!-- Sideslip feedback -->
+            <pure_gain name="Sideslip Feedback">
+                <input> aero/beta-rad </input>
+                <gain> -1.0 </gain>
+            </pure_gain>
+
+            <!-- Rudder command -->
+            <summer name="Rudder Command">
+                <input> fcs/yaw-trim-cmd-norm </input>
+                <input> fcs/pedals-cmd-norm </input>
+                <input> fcs/yaw-rate-feedback </input>
+                <input> fcs/sideslip-feedback </input>
+                <clipto>
+                    <min> -30.0 </min>
+                    <max>  30.0 </max>
+                </clipto>
+            </summer>
+
+            <scheduled_gain name="Rudder Authority Limiter">
+                <input> fcs/rudder-command </input>
+                <gain>
+                    <table>
+                        <independent> velocities/mach </independent>
+                        <dependent>
+                             0.2
+                             0.4
+                             0.8
+                             1.0
+                        </dependent>
+                    </table>
+                </gain>
+            </scheduled_gain>
+
+            <!-- Rudder actuator -->
+            <actuator name="Rudder">
+                <input> fcs/rudder-authority-limiter </input>
+                <lag> 20.0 </lag>
+                <clipto>
+                    <min> -30.0 </min>
+                    <max>  30.0 </max>
+                </clipto>
+            </actuator>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             FLAPS CHANNEL
+        #####################################################################
+        -->
+        <channel name="Flaps">
+            <!--
+                Trailing edge flap deployment is automatic, based on airspeed.
+            -->
+            <scheduled_gain name="Trailing Edge Flap Command">
+                <input> velocities/vc-kts </input>
+                <gain>
+                    <table>
+                        <independent> 0   250 </independent>
+                        <dependent>   1.0 0.0 </dependent>
+                    </table>
+                </gain>
+            </scheduled_gain>
+
+            <actuator name="Trailing Edge Flap">
+                <input> fcs/trailing-edge-flap-command </input>
+                <lag> 2.0 </lag>
+                <clipto>
+                    <min> 0.0 </min>
+                    <max> 1.0 </max>
+                </clipto>
+            </actuator>
+
+            <!--
+                Leading edge flap deployment is automatic, based on angle of
+                attack and gear state.
+            -->
+            <scheduled_gain name="LE Flap Command from Alpha">
+                <input> aero/alpha-rad </input>
+                <gain>
+                    <table>
+                        <independent> 0.0 0.523 </independent>
+                        <dependent>   0.0 1.0   </dependent>
+                    </table>
+                </gain>
+            </scheduled_gain>
+
+            <switch name="LE Flap Command Switch">
+                <default value="0.0"/>
+                <test logic="AND" value="fcs/le-flap-command-from-alpha">
+                    gear/gear-pos-norm eq 1
+                </test>
+            </switch>
+
+            <actuator name="Leading Edge Flap">
+                <input> fcs/le-flap-command-switch </input>
+                <lag> 2.0 </lag>
+                <clipto>
+                    <min> 0.0 </min>
+                    <max> 1.0 </max>
+                </clipto>
+            </actuator>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             SPEEDBRAKE
+        #####################################################################
+        -->
+        <channel name="Speedbrake">
+            <!--
+                The speedbrake automatically deploys at high alpha to prevent
+                deep stall. Also, when the landing gear is extended, the
+                speedbrake deflection is reduced to prevent ground strikes.
+                The speedbrake can also be controlled manually via a cockpit
+                switch.
+            -->
+            <scheduled_gain name="Alpha Speedbrake">
+                <input> aero/alpha-rad </input>
+                <gain>
+                    <table>
+                        <independent> 0.4363 0.5235 </independent>
+                        <dependent>   0.0    1.0    </dependent>
+                    </table>
+                </gain>
+            </scheduled_gain>
+
+            <summer name="Speedbrake Summing Junction">
+                <input> fcs/alpha-speedbrake </input>
+                <input> fcs/speedbrake-cmd-norm </input>
+            </summer>
+
+            <switch name="Speedbrake Switch">
+                <default value="1.0"/>
+                <test logic="AND" value="0.67">
+                    gear/gear-pos-norm eq 1
+                </test>
+            </switch>
+
+            <pure_gain name="Speedbrake Gain">
+                <input> fcs/speedbrake-summing-junction </input>
+                <gain> fcs/speedbrake-switch </gain>
+            </pure_gain>
+
+            <actuator name="Speedbrake">
+                <input> fcs/speedbrake-gain </input>
+                <lag> 1.0 </lag>
+                <clipto>
+                    <min> 0.0 </min>
+                    <max> 1.0 </max>
+                </clipto>
+            </actuator>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             LANDING GEAR
+        #####################################################################
+        -->
+        <channel name="Landing Gear">
+            <kinematic name="Gear Position">
+                <input> gear/gear-cmd-norm </input>
+                <traverse_time> 8 </traverse_time>
+                <clipto>
+                    <min> 0 </min>
+                    <max> 1 </max>
+                </clipto>
+            </kinematic>
+            <kinematic name="Gear Door Position">
+                <input> gear/gear-pos-norm </input>
+                <function>
+                    <table>
+                        <independent> 0.0 0.1 0.9 1.0 </independent>
+                        <dependent>   0.0 1.0 1.0 0.0 </dependent>
+                    </table>
+                </function>
+                <clipto>
+                    <min> 0 </min>
+                    <max> 1 </max>
+                </clipto>
+            </kinematic>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             HOOK
+        #####################################################################
+        -->
+        <channel name="Hook">
+            <kinematic name="Hook Position">
+                <input> gear/hook-cmd-norm </input>
+                <traverse_time> 2 </traverse_time>
+                <clipto>
+                    <min> 0 </min>
+                    <max> 1 </max>
+                </clipto>
+            </kinematic>
+        </channel>
+
+        <!--
+        #####################################################################
+        #                             CANOPY
+        #####################################################################
+        -->
+        <channel name="Canopy">
+            <kinematic name="Canopy Position">
+                <input> simulation/canopy-cmd-norm </input>
+                <traverse_time> 5 </traverse_time>
+                <clipto>
+                    <min> 0 </min>
+                    <max> 1 </max>
+                </clipto>
+            </kinematic>
+        </channel>
+    </flight_control>
+
+    <aerodynamics>
+        <!--
+            The aerodynamic data is a function of angle-of-attack,
+            sideslip angle, and elevator, aileron, and rudder deflections. The aerodynamic data
+            is valid for angles-of-attack from -10 to 45 degrees, and for sideslip angles from
+            -30 to 30 degrees.
+        -->
+        <axis name="DRAG">
+            <!-- Ground effect -->
+            <function name="aero/function/ground-effect-drag-factor">
+                <description>Drag factor due to ground effect</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>aero/cl-squared</property>
+                    <property>aero/function/ground-effect-factor</property>
+                    <value>-0.063</value>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-alpha">
+                <description>Drag from alpha</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <table name="CDa">
+                        <independent>aero/alpha-rad</independent>
+                        <dependent>
+                            <value ind="-0.3490">  0.0380 </value>
+                            <value ind="-0.2618">  0.0230 </value>
+                            <value ind=" 0.0000">  0.0160 </value>
+                            <value ind=" 0.2618">  0.0230 </value>
+                            <value ind=" 0.3490">  0.0380 </value>
+                            <value ind=" 0.5236">  0.0800 </value>
+                            <value ind=" 0.6981">  0.1500 </value>
+                            <value ind=" 0.8727">  0.2400 </value>
+                            <value ind=" 1.0472">  0.3400 </value>
+                            <value ind=" 1.2217">  0.4600 </value>
+                            <value ind=" 1.3963">  0.6000 </value>
+                            <value ind=" 1.5708">  0.7400 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-beta">
+                <description>Drag from beta</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <table name="CDb">
+                        <independent>aero/beta-rad</independent>
+                        <dependent>
+                            <value ind="-0.5236"> 0.20 </value>
+                            <value ind="-0.2618"> 0.05 </value>
+                            <value ind=" 0.0000"> 0.00 </value>
+                            <value ind=" 0.2618"> 0.05 </value>
+                            <value ind=" 0.5236"> 0.20 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-mach">
+                <description>Drag from mach</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <table name="CDmach">
+                        <independent>velocities/mach</independent>
+                        <dependent>
+                            <value ind="0.0"> 0.000 </value>
+                            <value ind="0.8"> 0.000 </value>
+                            <value ind="1.2"> 0.025 </value>
+                            <value ind="2.0"> 0.020 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-flaps">
+                <description>Drag from flaps</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/flap-pos-deg</property>
+                    <value>0.002</value>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-le-flaps">
+                <description>Drag from leading edge flaps</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/le-flap-pos-rad</property>
+                    <value>0.015</value>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-gear">
+                <description>Drag from landing gear</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>gear/gear-pos-norm</property>
+                    <value>0.025</value>
+                </product>
+            </function>
+            <function name="aero/function/drag-from-speedbrake">
+                <description>Drag from speedbrake</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/speedbrake-pos-norm</property>
+                    <value>0.04</value>
+                </product>
+            </function>
+        </axis>
+
+        <axis name="SIDE">
+            <function name="aero/function/side-from-beta">
+                <description>Side force from beta</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <table name="CYb">
+                        <independent>aero/beta-rad</independent>
+                        <dependent>
+                            <value ind="-0.5236">  0.150 </value>
+                            <value ind="-0.2618">  0.075 </value>
+                            <value ind=" 0.0000">  0.000 </value>
+                            <value ind=" 0.2618"> -0.075 </value>
+                            <value ind=" 0.5236"> -0.150 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/side-from-aileron">
+                <description>Side force from aileron</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/aileron-pos-rad</property>
+                    <value>0.002</value>
+                </product>
+            </function>
+            <function name="aero/function/side-from-rudder">
+                <description>Side force from rudder</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/rudder-pos-rad</property>
+                    <value>0.02</value>
+                </product>
+            </function>
+        </axis>
+
+        <axis name="LIFT">
+            <!-- Ground effect -->
+            <function name="aero/function/ground-effect-lift-factor">
+                <description>Lift factor due to ground effect</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>aero/cl-squared</property>
+                    <property>aero/function/ground-effect-factor</property>
+                    <value>0.252</value>
+                </product>
+            </function>
+            <function name="aero/function/lift-from-alpha">
+                <description>Lift from alpha</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <table name="CLa">
+                        <independent>aero/alpha-rad</independent>
+                        <dependent>
+                            <value ind="-0.3490"> -0.6000 </value>
+                            <value ind="-0.1745"> -0.3200 </value>
+                            <value ind=" 0.0000">  0.0000 </value>
+                            <value ind=" 0.1745">  0.3200 </value>
+                            <value ind=" 0.3490">  0.6000 </value>
+                            <value ind=" 0.5236">  0.8000 </value>
+                            <value ind=" 0.6981">  0.9000 </value>
+                            <value ind=" 0.8727">  0.9000 </value>
+                            <value ind=" 1.0472">  0.7000 </value>
+                            <value ind=" 1.2217">  0.5000 </value>
+                            <value ind=" 1.3963">  0.3000 </value>
+                            <value ind=" 1.5708">  0.1000 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/lift-from-elevator">
+                <description>Lift from elevator</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/elevator-pos-rad</property>
+                    <value>0.015</value>
+                </product>
+            </function>
+            <function name="aero/function/lift-from-flaps">
+                <description>Lift from flaps</description>
+                <product>
+                    <property>aero/function/qbar-area</property>
+                    <property>fcs/flap-pos-deg</property>
+                    <value>0.005</value>
+                </product>
+            </function>
+        </axis>
+
+        <axis name="ROLL">
+            <function name="aero/function/roll-from-beta">
+                <description>Roll moment from beta</description>
+                <product>
+                    <property>aero/function/qbar-area-span</property>
+                    <table name="Clb">
+                        <independent>aero/beta-rad</independent>
+                        <dependent>
+                            <value ind="-0.5236"> -0.0500 </value>
+                            <value ind="-0.2618"> -0.0250 </value>
+                            <value ind="-0.1745"> -0.0120 </value>
+                            <value ind=" 0.0000">  0.0000 </value>
+                            <value ind=" 0.1745">  0.0120 </value>
+                            <value ind=" 0.2618">  0.0250 </value>
+                            <value ind=" 0.5236">  0.0500 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/roll-from-aileron">
+                <description>Roll moment from aileron</description>
+                <product>
+                    <property>aero/function/qbar-area-span</property>
+                    <property>fcs/aileron-pos-rad</property>
+                    <value>-0.004</value>
+                </product>
+            </function>
+            <function name="aero/function/roll-from-rudder">
+                <description>Roll moment from rudder</description>
+                <product>
+                    <property>aero/function/qbar-area-span</property>
+                    <property>fcs/rudder-pos-rad</property>
+                    <value>0.001</value>
+                </product>
+            </function>
+            <function name="aero/function/roll-from-p">
+                <description>Roll damping</description>
+                <product>
+                    <property>aero/function/qbar-area-span-v</property>
+                    <property>velocities/p-rad_sec</property>
+                    <value>-0.3</value>
+                </product>
+            </function>
+            <function name="aero/function/roll-from-r">
+                <description>Roll from yaw rate</description>
+                <product>
+                    <property>aero/function/qbar-area-span-v</property>
+                    <property>velocities/r-rad_sec</property>
+                    <value>0.06</value>
+                </product>
+            </function>
+        </axis>
+
+        <axis name="PITCH">
+            <function name="aero/function/pitch-from-alpha">
+                <description>Pitch moment from alpha</description>
+                <product>
+                    <property>aero/function/qbar-area-chord</property>
+                    <table name="Cma">
+                        <independent>aero/alpha-rad</independent>
+                        <dependent>
+                            <value ind="-0.3490">  0.2000 </value>
+                            <value ind="-0.1745">  0.1000 </value>
+                            <value ind=" 0.0000">  0.0000 </value>
+                            <value ind=" 0.1745"> -0.1000 </value>
+                            <value ind=" 0.3490"> -0.2000 </value>
+                            <value ind=" 0.5236"> -0.1500 </value>
+                            <value ind=" 0.6981"> -0.1000 </value>
+                            <value ind=" 0.8727">  0.0000 </value>
+                            <value ind=" 1.0472">  0.1000 </value>
+                            <value ind=" 1.2217">  0.2000 </value>
+                            <value ind=" 1.3963">  0.3000 </value>
+                            <value ind=" 1.5708">  0.4000 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/pitch-from-elevator">
+                <description>Pitch moment from elevator</description>
+                <product>
+                    <property>aero/function/qbar-area-chord</property>
+                    <property>fcs/elevator-pos-rad</property>
+                    <value>-0.025</value>
+                </product>
+            </function>
+            <function name="aero/function/pitch-from-flaps">
+                <description>Pitch moment from flaps</description>
+                <product>
+                    <property>aero/function/qbar-area-chord</property>
+                    <property>fcs/flap-pos-deg</property>
+                    <value>-0.001</value>
+                </product>
+            </function>
+            <function name="aero/function/pitch-from-q">
+                <description>Pitch damping</description>
+                <product>
+                    <property>aero/function/qbar-area-chord-v</property>
+                    <property>velocities/q-rad_sec</property>
+                    <value>-8.0</value>
+                </product>
+            </function>
+        </axis>
+
+        <axis name="YAW">
+            <function name="aero/function/yaw-from-beta">
+                <description>Yaw moment from beta</description>
+                <product>
+                    <property>aero/function/qbar-area-span</property>
+                    <table name="Cnb">
+                        <independent>aero/beta-rad</independent>
+                        <dependent>
+                            <value ind="-0.5236"> -0.1000 </value>
+                            <value ind="-0.2618"> -0.0500 </value>
+                            <value ind=" 0.0000">  0.0000 </value>
+                            <value ind=" 0.2618">  0.0500 </value>
+                            <value ind=" 0.5236">  0.1000 </value>
+                        </dependent>
+                    </table>
+                </product>
+            </function>
+            <function name="aero/function/yaw-from-aileron">
+                <description>Adverse yaw</description>
+                <product>
+                    <property>aero/function/qbar-area-span</property>
+                    <property>fcs/aileron-pos-rad</property>
+                    <value>-0.0002</value>
+                </product>
+            </function>
+            <function name="aero/function/yaw-from-rudder">
+                <description>Yaw moment from rudder</description>
+                <product>
+                    <property>aero/function/qbar-area-span</property>
+                    <property>fcs/rudder-pos-rad</property>
+                    <value>-0.002</value>
+                </product>
+            </function>
+            <function name="aero/function/yaw-from-p">
+                <description>Yaw from roll rate</description>
+                <product>
+                    <property>aero/function/qbar-area-span-v</property>
+                    <property>velocities/p-rad_sec</property>
+                    <value>-0.06</value>
+                </product>
+            </function>
+            <function name="aero/function/yaw-from-r">
+                <description>Yaw damping</description>
+                <product>
+                    <property>aero/function/qbar-area-span-v</property>
+                    <property>velocities/r-rad_sec</property>
+                    <value>-0.09</value>
+                </product>
+            </function>
+        </axis>
+
+    </aerodynamics>
+
+</fdm_config>
